@@ -46,6 +46,7 @@
 //!
 //! let mut validation = jwt::Validation::new(alg);
 //! validation.validate_exp = false;
+//! validation.set_required_spec_claims::<&'static str>(&[]);
 //! jwt::decode::<TokenClaims>(&token, &my_jwk.key.to_decoding_key(), &validation).unwrap();
 //! }
 //! ```
@@ -333,9 +334,7 @@ impl Key {
 
                 match private {
                     Some(
-                        private
-                        @
-                        RsaPrivate {
+                        private @ RsaPrivate {
                             d: _,
                             p: Some(_),
                             q: Some(_),
@@ -415,7 +414,7 @@ impl Key {
         let sk = elliptic_curve::SecretKey::random(&mut rand::thread_rng());
         let sk_scalar = p256::Scalar::from(&sk);
 
-        let pk = p256::ProjectivePoint::generator() * sk_scalar;
+        let pk = p256::ProjectivePoint::GENERATOR * sk_scalar;
         let pk_bytes = &pk
             .to_affine()
             .to_encoded_point(false /* compress */)
@@ -577,20 +576,19 @@ const _IMPL_JWT_CONVERSIONS: () = {
             self.try_to_encoding_key().unwrap()
         }
 
-        pub fn to_decoding_key(&self) -> jwt::DecodingKey<'static> {
+        pub fn to_decoding_key(&self) -> jwt::DecodingKey {
             match self {
-                Self::Symmetric { key } => jwt::DecodingKey::from_secret(key).into_static(),
+                Self::Symmetric { key } => jwt::DecodingKey::from_secret(key),
                 Self::EC { .. } => {
                     // The following will not panic: all EC JWKs have public components due to
                     // typing. PEM conversion will always succeed, for the same reason.
                     // Hence, jwt::DecodingKey shall have no issue with de-converting.
                     jwt::DecodingKey::from_ec_pem(self.to_public().unwrap().to_pem().as_bytes())
                         .unwrap()
-                        .into_static()
                 }
-                Self::RSA { .. } => jwt::DecodingKey::from_rsa_pem(self.to_pem().as_bytes())
-                    .unwrap()
-                    .into_static(),
+                Self::RSA { .. } => {
+                    jwt::DecodingKey::from_rsa_pem(self.to_pem().as_bytes()).unwrap()
+                }
             }
         }
     }

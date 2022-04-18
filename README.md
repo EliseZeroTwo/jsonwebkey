@@ -58,6 +58,7 @@ let token = jwt::encode(
 
 let mut validation = jwt::Validation::new(alg);
 validation.validate_exp = false;
+validation.set_required_spec_claims::<&'static str>(&[]);
 jwt::decode::<TokenClaims>(&token, &my_jwk.key.to_decoding_key(), &validation).unwrap();
 }
 ```

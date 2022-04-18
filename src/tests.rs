@@ -112,6 +112,7 @@ fn generate_p256() {
 
     let mut validation = jwt::Validation::new(the_jwk.algorithm.unwrap().into());
     validation.validate_exp = false;
+    validation.set_required_spec_claims::<&'static str>(&[]);
     let public_pem = the_jwk.key.to_public().unwrap().to_pem();
     let decoding_key = jwt::DecodingKey::from_ec_pem(public_pem.as_bytes()).unwrap();
     jwt::decode::<TokenClaims>(&token, &decoding_key, &validation).unwrap();
