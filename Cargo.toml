@@ -1,13 +1,12 @@
 [package]
 name = "jsonwebkey"
 version = "0.4.0"
-authors = ["Nick Hynes <nhynes@nhynes.com>"]
+authors = ["Nick Hynes <nhynes@nhynes.com>", "EliseZeroTwo <mail@elise.moe>"]
 description = "JSON Web Key (JWK) (de)serialization, generation, and conversion."
 readme = "README.md"
-repository = "https://github.com/nhynes/jwk-rs"
-documentation = "http://docs.rs/jsonwebkey/"
+repository = "https://github.com/EliseZeroTwo/jsonwebkey"
 license = "MIT"
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 base64        = "0.13"
@@ -30,6 +29,3 @@ generate     = ["p256", "rand"]
 
 [dev-dependencies]
 jsonwebtoken = "8.1"
-
-[package.metadata.docs.rs]
-all-features = true
