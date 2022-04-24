@@ -16,6 +16,7 @@ static P256_JWK_FIXTURE: &str = r#"{
         "alg": "ES256"
     }"#;
 
+#[cfg(feature = "pkcs-convert")]
 static P384_JWK_FIXTURE: &str = r#"{
         "kty": "EC",
         "d": "qzp82B9d-COgCfNp-u33PYAcggkgoC5n3Unxc-yhiawKdrDSVw65NwqgscQAxNI3",
